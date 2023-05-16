@@ -1,0 +1,1 @@
+# zabbixTemplate-MSP360
