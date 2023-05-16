@@ -1,2 +1,2 @@
-apiUser = ""
-apiPassword = ""
+apiUser = "xxx"
+apiPassword = "xxx"
