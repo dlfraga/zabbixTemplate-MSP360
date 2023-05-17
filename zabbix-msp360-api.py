@@ -28,9 +28,9 @@ elif authenticationRequest.status_code == 200:
             },
         )
     else:
-        # get user data for the primary LLD rule
+        # get all monitor data for the primary LLD rule
         monitoringData = requests.get(
-            "https://api.mspbackups.com/api/Users",
+            "https://api.mspbackups.com/api/Monitoring",
             headers={
                 "Authorization": "Bearer " + access_token,
                 "Accept": "application/json",
@@ -39,9 +39,9 @@ elif authenticationRequest.status_code == 200:
 
     if monitoringData.status_code == 200:
         print(monitoringData.text)
-        file = open('retorno.json', 'w')
-        file.write(monitoringData.text)
-        file.close()
+        #file = open('retorno.json', 'w')
+        #file.write(monitoringData.text)
+        #file.close()
     else:
         print({"API acccess error": monitoringData.status_code})
 
