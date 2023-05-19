@@ -1,6 +1,6 @@
 zabbix_export:
   version: '6.0'
-  date: '2023-05-18T18:51:46Z'
+  date: '2023-05-19T20:56:57Z'
   groups:
     -
       uuid: 7df96b18c230490a9a0a9e2307226338
@@ -32,11 +32,182 @@ zabbix_export:
           delay: '0'
           item_prototypes:
             -
-              uuid: a7ea2f5bd50741568149fc4ec7ee1bfe
-              name: 'MSP360 Backup status for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              uuid: 3ddf64ea03ef46ac8997305940a1f9f8
+              name: 'MSP360 Last plan duration for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
               type: DEPENDENT
-              key: 'msp360-status-backup-[{#PLANID}]'
+              key: 'msp360-backupduration-[{#PLANID}]'
               delay: '0'
+              units: min
+              description: 'Last plan duration in minutes'
+              valuemap:
+                name: BackupStatus
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..Duration
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - min.
+                    - ''
+                -
+                  type: TRIM
+                  parameters:
+                    - ' '
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 5c3c39ff6582423abce947329e23952a
+              name: 'MSP360 Plan data copied [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planDataCopied-[{#PLANID}]'
+              delay: '0'
+              description: 'Total data copied during the plan exection'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..DataCopied
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 626e883a1fe64c8da8c953073fc58b93
+              name: 'MSP360 Plan data to backup  [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planDataToBackup-[{#PLANID}]'
+              delay: '0'
+              description: 'Data to be backed up'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..DataToBackup
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 4061361685bc4b68a16caeb12e48c25e
+              name: 'MSP360 Plan last start date [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planLastStart-[{#PLANID}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              description: 'Last start date for the plan'
+              valuemap:
+                name: BackupStatus
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..LastStart
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - T
+                    - ' '
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 56c8b27ffaf04889bd27cf3f9c6c19cf
+              name: 'MSP360 Plan next start date [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planNextStart-[{#PLANID}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              description: 'Nest start date for the plan'
+              valuemap:
+                name: BackupStatus
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..NextStart
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - T
+                    - ' '
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: a7ea2f5bd50741568149fc4ec7ee1bfe
+              name: 'MSP360 Plan status [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planStatus-[{#PLANID}]'
+              delay: '0'
+              description: 'Plan status https://help.mspbackups.com/mbs-api-specification/methods/get-apimonitoringuserid/monitoringplanstatus.'
               valuemap:
                 name: BackupStatus
               preprocessing:
@@ -62,14 +233,157 @@ zabbix_export:
                 key: zabbix-msp360-api.py
               trigger_prototypes:
                 -
-                  uuid: 95abedd5d4f34640a9094968b1b7895e
-                  expression: 'last(/Backups-Msp360/msp360-status-backup-[{#PLANID}])<>0'
+                  uuid: f37cf09f53e14736a277b1a45235427d
+                  expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=1'
                   recovery_mode: RECOVERY_EXPRESSION
-                  recovery_expression: 'last(/Backups-Msp360/msp360-status-backup-[{#PLANID}])=0'
+                  recovery_expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=0'
+                  name: 'MSP360 Backup overdue for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+                  priority: WARNING
+                  description: 'A plan was last ran too long ago.'
+                  manual_close: 'YES'
+                -
+                  uuid: 95abedd5d4f34640a9094968b1b7895e
+                  expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=2'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=0'
                   name: 'MSP360 Backup problem detected for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
                   priority: HIGH
-                  description: 'A status different than 0 was detected in the backup/restore/consistency plan.'
+                  description: 'An error status was detected in the backup/restore/consistency plan.'
                   manual_close: 'YES'
+                -
+                  uuid: d8f293eb95434c939f1196b5297c6618
+                  expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=7'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/Backups-Msp360/msp360-planStatus-[{#PLANID}])=0'
+                  name: 'MSP360 Backup warning for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+                  priority: WARNING
+                  description: 'The last time this plan was executed it finished with warnings.'
+                  manual_close: 'YES'
+            -
+              uuid: 4ac8f9662a4042218d1c717ec0ffbe84
+              name: 'MSP360 Plan total data [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planTotalData-[{#PLANID}]'
+              delay: '0'
+              description: 'Total backup data'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..TotalData
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 6fb6912707914eb9b3c511474fae4d5c
+              name: 'MSP360 Plan type [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-planType-[{#PLANID}]'
+              delay: '0'
+              description: 'Type of plan. File, hyperv or etc.'
+              valuemap:
+                name: PlanType
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..PlanType
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: 8db74d8cd16b480e9047f88075bb24d6
+              name: 'MSP360 Plan report link [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-reportLink-[{#PLANID}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              description: 'Plan report link with details about the last status. It may or may not return data depending on the plan type.'
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..DetailedReportLink
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - 'null'
+                    - none
+              master_item:
+                key: zabbix-msp360-api.py
+            -
+              uuid: bffa59dc1ae0478296cc096f1ae674c5
+              name: 'MSP360 Backup status description for [{#COMPANYNAME}] [{#COMPUTERNAME}] [{#PLANNAME}]'
+              type: DEPENDENT
+              key: 'msp360-status-statusDescription-[{#PLANID}]'
+              delay: '0'
+              trends: '0'
+              value_type: TEXT
+              description: 'Extended error description for the plan. It may not return data (aside from null) if there''s no error. It way also return warning messages.'
+              valuemap:
+                name: BackupStatus
+              preprocessing:
+                -
+                  type: JSONPATH
+                  parameters:
+                    - '$[?(@.PlanId==''{#PLANID}'')]'
+                -
+                  type: JSONPATH
+                  parameters:
+                    - $..ErrorMessage
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - '['
+                    - ''
+                -
+                  type: STR_REPLACE
+                  parameters:
+                    - ']'
+                    - ''
+              master_item:
+                key: zabbix-msp360-api.py
           master_item:
             key: zabbix-msp360-api.py
           lld_macro_paths:
