@@ -6,6 +6,12 @@ zabbix-msp360-api.py: The external zabbix script. It is used to authenticate on 
 config.py: This file has the API username and password and must be filled with your own login details.
 Template-MSP360.yaml: Zabbix template.
 
+## Requirements
+1. Tested on python 3.10 (it may work on other versions);
+2. Package python-requests;
+3. Tested on zabbix LTS 6.0;
+4. MSP360 api credentials.
+
 ## Installation
 1. Download the repo;
 2. Copy zabbix-msp360-api.py and config.py to the "externalscripts" folder on your zabbix server;
